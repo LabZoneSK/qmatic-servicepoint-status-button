@@ -1,13 +1,13 @@
 <widget xmlns="http://www.w3.org/ns/widgets"
     xmlns:q="http://qmatic.com"
-    id="http://qmatic.com/widgets/customWidget"
+    id="http://qmatic.com/widgets/serviceStatusWidget"
     version="HEAD"
     width="200"
     height="320">
 
-    <name>customWidget</name>
-    <name xml:lang="en">Custom Widget</name>
-    <description>Description of the widget</description>
+    <name>serviceStatusWidget</name>
+    <name xml:lang="en">Service Point Status Widget</name>
+    <description>Print ticket based on service point status.</description>
     <license>GNU GPL</license>
 
     <!--  Tell wookie to include resources from orchestra-widget feature. This feature allows us to get events from Orchestra and communicate with other widgets and receive q:attribute data --> 
@@ -20,12 +20,11 @@
     <access origin="*" /> 
 
     <q:standalone>false</q:standalone>
-    <!--
-    Widget Attributes
-    <q:attribute type="string" key="first_name" name="staff.first.name" description="staff.firstName.description" defaultValue=""></q:attribute> 
-    <q:attribute type="string" key="last_name" name="staff.last.name" description="staff.lastName.description" defaultValue=""></q:attribute>
-    <q:attribute type="string" key="service_button" name="staff.button" description="staff.button.description" defaultValue=""></q:attribute>  
-    <q:attribute type="image" key="profile" name="staff.image" description="staff.image.description"></q:attribute>
-    -->
+
+    <q:attribute type="service" key="service" name="service.label" description="service.description" defaultValue=""></q:attribute> 
+    <q:attribute type="string" key="workprofile_match" name="workprofile.match.label" description="workprofile.match.description" defaultValue=""></q:attribute> 
+    <q:attribute type="page" key="closed_page" name="closed.page" description="closed.page.description" defaultValue=""></q:attribute> 
+    <q:attribute type="page" key="ticket_page" name="ticket.page" description="ticket.page.description" defaultValue=""></q:attribute> 
+    <q:attribute type="image" key="button_img" name="button.image" description="button.image.description"></q:attribute>
 
 </widget>
