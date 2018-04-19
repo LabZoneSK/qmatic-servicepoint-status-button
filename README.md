@@ -20,6 +20,8 @@ Create ZIP file from files in build folder and change extension to .wgt
 ## Usage
 Upload new widget to Orchestra system and assign unit types (Touchscreen - Intro and Generic). Add widget to your surface and configure it.
 
+![Properties](docs/properties.jpg)
+
 Property | Type | Description
 --- | --- | ---
 Service | service | Click on the button creates visit for this service
@@ -28,4 +30,4 @@ Closed | page | Show this page when there is no open workstation with profile wh
 Take ticket | page | Show this page if there is open workstation. For example> Take ticket.
 Image | image | Image for this button.
 
-For more questions or if you want to participate, contact me at Twitter: @starosta
+For more questions or if you want to participate, contact me at Twitter: @starosta83
