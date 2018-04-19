@@ -5,6 +5,8 @@ Widget for Qmatic Orchestra platform
 Creates simple button which will create visit for selected service or displays selected page. This button is used
 in cases when you need to create visit (print ticket) if there is open Service Point with defined Work Profile. If there is no open Service Point with defined Work Profile, system will display selected page.
 
+![Decision](docs/decision.png)
+
 ## Install
 Clone or download repository and run
 `npm install`
@@ -20,8 +22,6 @@ Create ZIP file from files in build folder and change extension to .wgt
 ## Usage
 Upload new widget to Orchestra system and assign unit types (Touchscreen - Intro and Generic). Add widget to your surface and configure it.
 
-![Properties](docs/properties.jpg)
-
 Property | Type | Description
 --- | --- | ---
 Service | service | Click on the button creates visit for this service
@@ -29,5 +29,7 @@ Work Profile Lookup | string | Script will look up for this string in name of wo
 Closed | page | Show this page when there is no open workstation with profile which match WP lookup
 Take ticket | page | Show this page if there is open workstation. For example> Take ticket.
 Image | image | Image for this button.
+
+![Properties](docs/properties.jpg)
 
 For more questions or if you want to participate, contact me at Twitter: @starosta83
