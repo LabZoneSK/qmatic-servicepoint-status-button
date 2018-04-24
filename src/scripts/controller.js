@@ -6,9 +6,26 @@ var controller = (function ($) {
   const branchId = wwClient.getBranchId();
   const unitId = wwClient.getUnitId();
 
+  var delaying = false;
+ 
+  function printTicket(widgetConfiguration) {
+    if(!delaying) {
+      delaying = true;
+      wwRest.createVisitByUnitId(unitId, {
+        services: [widgetConfiguration.service]
+      }, 'LAST');
+      setTimeout(
+				function() {
+					delaying = false;
+				},
+				10000
+			);
+    }
+  }
+
   function initializeWidget(widgetConfiguration) {
     const servicePointMI = wwRest.getServicePointData(branchId);
-    const openWSP = servicePointMI.filter(function(servicePoint) {
+    const openWSP = servicePointMI.filter(function (servicePoint) {
       if (servicePoint.workProfileName) {
         return (servicePoint.workProfileName.indexOf(widgetConfiguration.workprofileMatch) > -1);
       } else {
@@ -16,17 +33,20 @@ var controller = (function ($) {
       }
     });
 
-    if(openWSP.length > 0) {
+    if (openWSP.length > 0) {
       console.log('There is open workstation matching string ' + widgetConfiguration.workprofileMatch);
-      $('.widget-container').click(function(event) {
-        wwRest.createVisitByUnitId(unitId, {
-          services: [widgetConfiguration.service]
-        }, 'LAST');
+      $('.widget-container').click(function (event) {
+        $('.widget-container').css('display', 'none');
+        printTicket(widgetConfiguration);
         wwClient.switchHostPage(widgetConfiguration.ticketRedirectPage, false);
+
+        setTimeout(function () {
+          $('.widget-container').css('display', 'block');
+        }, 5000);
       });
     } else {
       console.log('There is no open workstation matching string ' + widgetConfiguration.workprofileMatch);
-      $('.widget-container').click(function(event) {
+      $('.widget-container').click(function (event) {
         wwClient.switchHostPage(widgetConfiguration.closedRedirectPage, false);
       });
     }
@@ -44,8 +64,8 @@ var controller = (function ($) {
         service: attribParser.getString('service')
       }
 
-      const imageSrc =  attribParser.getImageUrl('button_img');
-      if(imageSrc) {
+      const imageSrc = attribParser.getImageUrl('button_img');
+      if (imageSrc) {
         $('.widget-container img.button').attr('src', imageSrc);
       }
 
