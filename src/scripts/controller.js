@@ -1,28 +1,38 @@
 var controller = (function ($) {
   var self = this;
-  var wwClient = qmatic.webwidget.client;
-  var wwRest = qmatic.connector.client;
+  var wwClient = qmatic.webwidget.client; //Qmatic Widget Client
+  var wwRest = qmatic.connector.client;  //Qmatic REST Client
 
-  const branchId = wwClient.getBranchId();
-  const unitId = wwClient.getUnitId();
+  const branchId = wwClient.getBranchId(); //Holds ID of current branch
+  const unitId = wwClient.getUnitId();  //Holds ID of current unit
 
   var delaying = false;
- 
+
+  /**
+   * Creates visit for selected service.
+   * 
+   * @param {Object} widgetConfiguration Widget configuration parameters
+   */
   function printTicket(widgetConfiguration) {
-    if(!delaying) {
+    if (!delaying) {
       delaying = true;
       wwRest.createVisitByUnitId(unitId, {
         services: [widgetConfiguration.service]
       }, 'LAST');
       setTimeout(
-				function() {
-					delaying = false;
-				},
-				10000
-			);
+        function () {
+          delaying = false;
+        },
+        10000
+      );
     }
   }
 
+  /**
+   * Initialize widget and add event handler
+   * 
+   * @param {Object} widgetConfiguration Widget configuration parameters
+   */
   function initializeWidget(widgetConfiguration) {
     const servicePointMI = wwRest.getServicePointData(branchId);
     const openWSP = servicePointMI.filter(function (servicePoint) {
@@ -57,6 +67,7 @@ var controller = (function ($) {
       const attr = configuration.attributes;
       const attribParser = new qmatic.webwidget.AttributeParser(attr || {});
 
+      //Create configuration object for this widget
       const widgetConfiguration = {
         closedRedirectPage: attribParser.getString('closed_page'),
         ticketRedirectPage: attribParser.getString('ticket_page'),
@@ -64,12 +75,15 @@ var controller = (function ($) {
         service: attribParser.getString('service')
       }
 
+      //Set image for this widget
       const imageSrc = attribParser.getImageUrl('button_img');
       if (imageSrc) {
         $('.widget-container img.button').attr('src', imageSrc);
       }
 
       initializeWidget(widgetConfiguration);
+
+      //Refresh widget every 50 seconds
       setInterval(function () {
         initializeWidget(widgetConfiguration);
       }, 50000);
