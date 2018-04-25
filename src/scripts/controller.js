@@ -1,10 +1,10 @@
 var controller = (function ($) {
   var self = this;
   var wwClient = qmatic.webwidget.client; //Qmatic Widget Client
-  var wwRest = qmatic.connector.client;  //Qmatic REST Client
+  var wwRest = qmatic.connector.client; //Qmatic REST Client
 
   const branchId = wwClient.getBranchId(); //Holds ID of current branch
-  const unitId = wwClient.getUnitId();  //Holds ID of current unit
+  const unitId = wwClient.getUnitId(); //Holds ID of current unit
 
   var delaying = false;
 
@@ -35,6 +35,9 @@ var controller = (function ($) {
    */
   function initializeWidget(widgetConfiguration) {
     const servicePointMI = wwRest.getServicePointData(branchId);
+
+    const widgetContainer = $('.widget-container');
+
     const openWSP = servicePointMI.filter(function (servicePoint) {
       if (servicePoint.workProfileName) {
         return (servicePoint.workProfileName.indexOf(widgetConfiguration.workprofileMatch) > -1);
@@ -45,8 +48,10 @@ var controller = (function ($) {
 
     if (openWSP.length > 0) {
       console.log('There is open workstation matching string ' + widgetConfiguration.workprofileMatch);
-      $('.widget-container').click(function (event) {
-        $('.widget-container').css('display', 'none');
+
+      $('.widget-container').unbind();
+      $('.widget-container').bind('click', function (event) {
+        widgetContainer.css('display', 'none');
         printTicket(widgetConfiguration);
         wwClient.switchHostPage(widgetConfiguration.ticketRedirectPage, false);
 
@@ -56,7 +61,8 @@ var controller = (function ($) {
       });
     } else {
       console.log('There is no open workstation matching string ' + widgetConfiguration.workprofileMatch);
-      $('.widget-container').click(function (event) {
+      $('.widget-container').unbind();
+      $('.widget-container').bind('click', function (event) {
         wwClient.switchHostPage(widgetConfiguration.closedRedirectPage, false);
       });
     }
