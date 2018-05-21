@@ -8,6 +8,8 @@ var controller = (function ($) {
 
   var delaying = false;
 
+  const TICK = 50000;
+
   /**
    * Creates visit for selected service.
    * 
@@ -29,12 +31,45 @@ var controller = (function ($) {
   }
 
   /**
+   * Function loads service points data and stores them in session storage
+   * to reduce REST calls from multiple widgets.
+   * 
+   * @param {integer} branchId 
+   */
+  function getServicePointData(branchId) {
+    if (sessionStorage) {
+      const storedData = JSON.parse(sessionStorage.getItem('servicePointData'));
+
+      const now = new Date().getTime();
+      if (storedData) {
+        const diff = now - storedData.time;
+
+        if (diff < TICK) {
+          return storedData.data;
+        }
+      }
+
+      const servicePointData = wwRest.getServicePointData(branchId);
+      sessionStorage.setItem('servicePointData', JSON.stringify({
+        time: now,
+        data: servicePointData
+      }));
+
+      return servicePointData;
+    }
+
+    //sessionStorage is not supported
+    console.log("WARN: Session storage is not supported.");
+    return wwRest.getServicePointData(branchId);
+  }
+
+  /**
    * Initialize widget and add event handler
    * 
    * @param {Object} widgetConfiguration Widget configuration parameters
    */
   function initializeWidget(widgetConfiguration) {
-    const servicePointMI = wwRest.getServicePointData(branchId);
+    const servicePointMI = getServicePointData(branchId);
 
     const widgetContainer = $('.widget-container');
 
@@ -92,7 +127,7 @@ var controller = (function ($) {
       //Refresh widget every 50 seconds
       setInterval(function () {
         initializeWidget(widgetConfiguration);
-      }, 50000);
+      }, TICK);
     },
 
     onLoadError: function (message) {
